@@ -1,1 +1,49 @@
-print("Hello World!");
+from pyhdfs import HdfsClient
+from pyspark import SparkConf, SparkContext
+from pyspark.sql.session import SparkSession
+import mlflow
+import datetime
+import os
+import time
+from pyspark.sql.types import *
+import sys
+import re
+#python readTxt.py 11 /root/root/resources/ testtxt.txt 1 False None
+if __name__ == '__main__':
+    filename,resourcePath,resourceName,runid,wholetextp,lineSepp= sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6]
+
+    #os.environ ['JAVA_HOME'] = '/opt/jdk1.8.0_191'
+    #os.environ['PYSPARK_PYTHON'] = '/home/anaconda3/bin/python'
+    #sc.setLogLevel("WARN")
+    sc = SparkContext()
+    spark = SparkSession(sc)
+    tem = str(time.time())[-3:]   
+   
+    client = HdfsClient(hosts='192.168.61.172:50070', user_name='hadoop')
+    filePath=resourcePath+resourceName
+    flag =client.exists(filePath)
+    if flag:
+        filePath=filePath
+    else:
+        filePath="/root/root/resources/"+resourceName
+    print("2222222222")
+    print(filePath)
+    filePathAll="hdfs://192.168.61.172:9000"+filePath
+    #mlflow.tracking.set_tracking_uri("file:///root/mlruns")
+    filenameList=filename.split('-')  
+    mlflow.set_tracking_uri("http://192.168.61.172:5555")
+    with mlflow.start_run(run_id=runid):
+        now_time = datetime.datetime.now()
+        now = now_time.strftime('%Y-%m-%d %H:%M:%S')
+        mlflow.log_param("runtime-"+tem,now)
+        mlflow.log_param("run-"+tem, filenameList[0]+"-"+filenameList[1]+"-"+filenameList[2])
+    if lineSepp=="nbsp":
+        lineSepp=" "
+    wholetextp=(wholetextp=="True")
+    if lineSepp=="aa":
+        df=spark.read.format("text").option("wholetext",wholetextp).load(filePathAll)        
+    else:
+        df=spark.read.format("text").option("lineSep",lineSepp).option("wholetext",wholetextp).load(filePathAll)
+    print(df.show())
+    df.write.parquet(path="hdfs://192.168.61.172:9000/demo/"+filename,mode='overwrite')
+
