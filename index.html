@@ -23,25 +23,35 @@
     <script src="https://cdn.bootcss.com/ace/1.4.6/ace.js"></script>
     <script src="https://cdn.bootcss.com/ace/1.4.6/ext-beautify.js"></script>
     <script src="https://cdn.bootcss.com/ace/1.4.6/ext-language_tools.js"></script>
-    <script src="https://cdn.bootcss.com/ace/1.4.6/mode-javascript.js"></script>
+    <script src="https://cdn.bootcss.com/ace/1.4.6/mode-python.js"></script>
     <script src="https://cdn.bootcss.com/ace/1.4.6/theme-xcode.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        editor = ace.edit('editor'); // 这个地方就是id是editor的div
-        editor.setTheme('ace/theme/xcode');
-        let jsMode = ace.require('ace/mode/javascript').Mode;
-        editor.session.setMode(new jsMode());
-        //启用提示菜单
-        editor.setOptions({
-            enableBasicAutocompletion: true,
-            enableSnippets: true,
-            enableLiveAutocompletion: true
-        });
+        window.onload = function (params) {
+            editor = ace.edit('editor'); // 这个地方就是id是editor的div
+            editor.setTheme('ace/theme/xcode');
+            let pyMode = ace.require('ace/mode/python').Mode;
+            editor.session.setMode(new pyMode());
+            //启用提示菜单
+            editor.setOptions({
+                enableBasicAutocompletion: false,
+                enableSnippets: true,
+                enableLiveAutocompletion: true
+            });
+            ace.require("ace/ext/language_tools");
+            editor.setOption("wrap", "free")
+            editor.setShowPrintMargin(false); //设置打印线
+            editor.setHighlightActiveLine(true); //设置高亮
+            editor.setFontSize(14);
+            editor.on("change", function (e) {
+                editor.execCommand("startAutocomplete");
+            })
 
-        $.get("a", function (result) {
-            editor.setValue(result);
-        });
-        document.getElementById("editor").style.display = "block";
+            $.get("a", function (result) {
+                editor.setValue(result);
+            });
+            document.getElementById("editor").style.display = "block";
+        }
 
     </script>
 
