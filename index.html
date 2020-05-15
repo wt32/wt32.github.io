@@ -37,7 +37,7 @@
             winWidth = document.body.clientWidth;
         }
         document.getElementById("editor").style.width = (winWidth - 10) + "px";
-        document.getElementById("editor").style.height = (winHeight - 10) + "px";
+        document.getElementById("editor").style.height = (winHeight - 50) + "px";
         window.onload = function (params) {
             editor = ace.edit('editor'); // 这个地方就是id是editor的div
             editor.setTheme('ace/theme/xcode');
