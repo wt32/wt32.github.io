@@ -1,9 +1,24 @@
-[{
-  "a":1,
-  "b":2,
-  "c":3
-},{
-  "a":3,
-  "b":21,
-  "c":3
-}]
+{
+    "headers": {
+        "keyName1": {
+            "keyDesc": "keyDesc1"
+        },
+        "keyName2": {
+            "keyDesc": "keyDesc2"
+        },
+        "keyName3": {
+            "keyDesc": "keyDesc3"
+        }
+    },
+    "params": [{
+            "keyName1": "value1",
+            "keyName2": "value2",
+            "keyName3": "value3"
+        },
+        {
+            "keyName1": "value4",
+            "keyName2": "value5",
+            "keyName3": "value6"
+        }
+    ]
+}
